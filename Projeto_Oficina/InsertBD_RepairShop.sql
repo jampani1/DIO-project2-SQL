@@ -6,7 +6,6 @@ INSERT INTO clients(Fname, Lname, FedId) VALUES
 	('Antonia', 'Gomes', '36915984211');
 
 
-
 INSERT INTO vehicles(idClient, CarModel, CarBrand, CarColor, LicensePlate) VALUES
 	('1', 'Fiesta', 'Ford', 'Vermelho', 'ABC12D4'),
 	('1', 'Kicks', 'Nissan', 'Vermelho', 'EFG43Z1'),
