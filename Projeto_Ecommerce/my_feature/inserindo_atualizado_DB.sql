@@ -93,8 +93,8 @@ INSERT INTO ProdutoEstoque(idProduto, idEstoque, Quantidade) VALUES
 -- - Removido 'FedId' pois a nova tabela assume que fornecedores são sempre PJ (CNPJ).
 INSERT INTO Fornecedores(RazaoSocial, CNPJ, CEP) VALUES
     ('De Tudo um Pouco Distribuidora', '99898999999977', '04000000'),
-    ('Joaozinho Martins (CNPJ Fictício)', '11108000011100', '29990009'), 
-    ('Cultura Pop Ltda', '77700777999988', '37770777');
+    ('Joaozinho Martins', '11108000011100', '29990009'), 
+    ('Cultura Pop Ltda', '75335775391333', '04333555');
 
 
 -- 'retailers' -> 'Vendedores'
@@ -138,3 +138,20 @@ INSERT INTO ProdutoFornecedor(idFornecedor, idProduto, QuantidadeFornecida) VALU
     (1, 1, 50), (1, 2, 100), (1, 3, 2000),
     (2, 2, 155), (2, 3, 1050),
     (3, 1, 70), (3, 2, 500);
+    
+-- Adicionando um segundo pedido para a cliente Marcelina Barros (idCliente = 1)
+INSERT INTO Pedidos(idCliente, DescricaoPedido, Frete, StatusPedido, CodigoRastreio) VALUES (1, 'Compra de item de decoração', 22.50, 'Entregue', 'BR987654321BR');
+INSERT INTO ProdutoPedido(idPedido, idProduto, Quantidade, StatusProduto) VALUES (LAST_INSERT_ID(), 1, 1, 'Disponivel'); -- Adicionando o Sofá (idProduto=1) a este novo pedido
+INSERT INTO PagamentosPedido(idPedido, idFormaPagamento, StatusPagamento, ValorTotal) VALUES (LAST_INSERT_ID(), 1, 'Confirmado', 2500.00 + 22.50); -- Usando a forma de pagamento já existente (idFormaPagamento=1)
+
+-- Adicionando um novo cliente (Pessoa Jurídica) e seu pedido
+INSERT INTO Clientes(PrimeiroNome, Sobrenome, TipoPessoa, CNPJ, RazaoSocial, CEP, NumeroEndereco) VALUES ('Fábio', 'Reis', 'Juridica', '12345678000199', 'Escritório de Design Reis & Filhos', '01311000', 200);
+SET @new_client_id = LAST_INSERT_ID();
+INSERT INTO FormasPagamento(idCliente, TipoPagamento, Detalhes) VALUES (@new_client_id, 'Boleto', 'Boleto corporativo');
+SET @new_payment_id = LAST_INSERT_ID();
+INSERT INTO Pedidos(idCliente, DescricaoPedido, Frete, StatusPedido, CodigoRastreio) VALUES (@new_client_id, 'Compra de material de escritório', 45.00, 'Enviado', 'BR112233445BR');
+SET @new_order_id = LAST_INSERT_ID();
+INSERT INTO Produtos(NomeProduto, CustoUnitario, PrecoUnitario, Categoria, Avaliacao) VALUES ('Cadeira de Escritório Ergonômica', 150.00, 399.90, 'Casa e Decoracao', 4.8);
+SET @new_product_id = LAST_INSERT_ID();
+INSERT INTO ProdutoPedido(idPedido, idProduto, Quantidade, StatusProduto) VALUES (@new_order_id, @new_product_id, 5, 'Disponivel');
+INSERT INTO PagamentosPedido(idPedido, idFormaPagamento, StatusPagamento, ValorTotal) VALUES (@new_order_id, @new_payment_id, 'Confirmado', (399.90 * 5) + 45.00);

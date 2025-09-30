@@ -1,5 +1,6 @@
+-- DROP database ecommerce;
 -- CREATE database ecommerce;
-USE ecommerce;
+-- USE ecommerce;
 
 -- mudança no nome das tabelas para o português
 
